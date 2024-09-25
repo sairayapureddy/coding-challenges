@@ -42,7 +42,7 @@ func main() {
 		fmt.Printf("%d %s \n", len(data), fileName)
 	}
 	if *linePtr {
-		fmt.Printf("%d %s \n", len(strings.Split(data, "\n")), fileName)
+		fmt.Printf("%d %s \n", len(strings.Split(data, "\n"))-1, fileName)
 	}
 	if *wordPtr {
 		pattern := regexp.MustCompile(`\s+`)
@@ -50,5 +50,10 @@ func main() {
 	}
 	if *charPtr {
 		fmt.Printf("%d %s \n", utf8.RuneCountInString(data), fileName)
+	}
+
+	if !*bytePtr && !*linePtr && !*wordPtr {
+		pattern := regexp.MustCompile(`\s+`)
+		fmt.Printf("%d %d %d %s \n", len(strings.Split(data, "\n"))-1, len(pattern.FindAllString(data, -1)), len(data), fileName)
 	}
 }
