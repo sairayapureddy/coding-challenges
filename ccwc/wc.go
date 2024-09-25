@@ -5,12 +5,14 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 )
 
 func main() {
 	bytePtr := flag.Bool("c", false, "count the number of bytes")
 	linePtr := flag.Bool("l", false, "count the number of lines")
+	wordPtr := flag.Bool("w", false, "count the number of lines")
 	flag.Parse()
 
 	fileName := ""
@@ -39,5 +41,9 @@ func main() {
 	}
 	if *linePtr {
 		fmt.Printf("%d %s \n", len(strings.Split(data, "\n")), fileName)
+	}
+	if *wordPtr {
+		pattern := regexp.MustCompile(`\s+`)
+		fmt.Printf("%d %s \n", len(pattern.FindAllString(data, -1)), fileName)
 	}
 }
