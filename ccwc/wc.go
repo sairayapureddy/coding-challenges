@@ -7,12 +7,14 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"unicode/utf8"
 )
 
 func main() {
 	bytePtr := flag.Bool("c", false, "count the number of bytes")
 	linePtr := flag.Bool("l", false, "count the number of lines")
 	wordPtr := flag.Bool("w", false, "count the number of lines")
+	charPtr := flag.Bool("m", false, "count the number of characters")
 	flag.Parse()
 
 	fileName := ""
@@ -45,5 +47,8 @@ func main() {
 	if *wordPtr {
 		pattern := regexp.MustCompile(`\s+`)
 		fmt.Printf("%d %s \n", len(pattern.FindAllString(data, -1)), fileName)
+	}
+	if *charPtr {
+		fmt.Printf("%d %s \n", utf8.RuneCountInString(data), fileName)
 	}
 }
