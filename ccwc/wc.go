@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"regexp"
 	"strings"
@@ -32,10 +33,16 @@ func main() {
 			fmt.Println(ok.Error())
 		}
 	} else {
-		bytes := make([]byte, 0)
+		totalBytes := make([]byte, 0)
 		reader := bufio.NewReader(os.Stdin)
-		reader.Read(bytes)
-		data = string(bytes)
+		for {
+			bytes, err := reader.ReadBytes('\n')
+			if err == io.EOF {
+				break
+			}
+			totalBytes = append(totalBytes, bytes...)
+		}
+		data = string(totalBytes)
 	}
 
 	if *bytePtr {
@@ -52,7 +59,7 @@ func main() {
 		fmt.Printf("%d %s \n", utf8.RuneCountInString(data), fileName)
 	}
 
-	if !*bytePtr && !*linePtr && !*wordPtr {
+	if !*bytePtr && !*linePtr && !*wordPtr && !*charPtr {
 		pattern := regexp.MustCompile(`\s+`)
 		fmt.Printf("%d %d %d %s \n", len(strings.Split(data, "\n"))-1, len(pattern.FindAllString(data, -1)), len(data), fileName)
 	}
